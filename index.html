@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Is it AI? Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+    .quiz-container { background: white; max-width: 600px; margin: auto; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { font-size: 1.2em; margin-bottom: 15px; }
+    .intro { font-style: italic; margin-bottom: 15px; color: #333; }
+    .btn { display: inline-block; margin: 5px; padding: 10px 20px; background: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .btn:hover { background: #0056b3; }
+    .feedback { margin-top: 15px; }
+    img { max-width: 50%; height: auto; margin: 10px auto; display: block; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div class="intro">Can you spot what uses AI? Click Yes or No and find out!</div>
+    <div id="quiz">
+      <div class="question" id="question"></div>
+      <img id="question-img" src="" alt="Question Image" style="display: none;">
+      <button class="btn" onclick="answer(true)">Yes</button>
+      <button class="btn" onclick="answer(false)">No</button>
+      <div class="feedback" id="feedback"></div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "Look at the image below. Does a smartphone camera that blurs the background automatically use AI?",
+        a: true,
+        explanation: "Yes! It uses AI to recognize faces and backgrounds. It's like having a tiny, invisible photographer who knows what looks good.",
+        img: "https://cdn.glitch.global/7dba3d27-6270-4b3f-a1a3-27d68df2aac1/DALL%C2%B7E%202025-03-24%2016.48.42%20-%20A%20close-up%20photo%20of%20a%20smartphone%20using%20portrait%20mode%20to%20blur%20the%20background%20of%20a%20person's%20face.%20The%20background%20should%20be%20clearly%20blurred%2C%20with%20the%20sub.webp?v=1742849343449"
+      },
+      {
+        q: "Look at the image below. Is ChatGPT an example of AI?",
+        a: true,
+        explanation: "You bet! ChatGPT is AI — and it’s literally writing this quiz. 👀",
+        img: "https://cdn.glitch.global/7dba3d27-6270-4b3f-a1a3-27d68df2aac1/chatgpt.jpeg?v=1742850385881"
+      },
+      {
+        q: "Look at the image below. Does a traditional microwave oven use AI?",
+        a: false,
+        explanation: "Nope — unless it complains about being overworked, it’s not AI. Just buttons, timers, and snack magic.",
+        img: "https://cdn.glitch.global/7dba3d27-6270-4b3f-a1a3-27d68df2aac1/DALL%C2%B7E%202025-03-24%2017.08.01%20-%20A%20realistic%20photo%20of%20a%20traditional%20microwave%20oven%20on%20a%20kitchen%20counter.%20The%20microwave%20is%20closed%2C%20looks%20a%20bit%20older%20or%20standard%2C%20and%20does%20not%20have%20any%20.webp?v=1742850496179"
+      },
+      {
+        q: "Look at the image below. Does Google Maps traffic prediction use AI?",
+        a: true,
+        explanation: "Yes — it uses AI to predict traffic jams, even before you hit snooze for the fifth time.",
+        img: "https://cdn.glitch.global/7dba3d27-6270-4b3f-a1a3-27d68df2aac1/IMG_6597.PNG?v=1742853630545"
+      },
+      {
+        q: "Look at the image below. Does a basic spell checker that underlines misspelled words use AI?",
+        a: false,
+        explanation: "Basic spell check just compares words to a dictionary. No learning, no brain — just squiggles. But tools that suggest sentence rewrites or detect tone — like Grammarly or advanced Word features — do use AI.",
+        img: "https://cdn.glitch.global/7dba3d27-6270-4b3f-a1a3-27d68df2aac1/943-001.png?v=1742854302855"
+      },
+      {
+        q: "Look at the image below. When you shop online and see 'Recommended for You,' is that AI?",
+        a: true,
+        explanation: "Yep — your shopping cart has an algorithmic stalker. But a helpful one. Mostly.",
+        img: "https://cdn.glitch.global/7dba3d27-6270-4b3f-a1a3-27d68df2aac1/Untitled%20presentation%20(20).jpg?v=1742863799946"
+      },
+      {
+        q: "Look at the image below. Is using a graphics editor, like Canva, to design a brochure an example of AI?",
+        a: false,
+        explanation: "Nope! Canva is a great design tool, but unless it’s magically choosing your fonts and layout, it’s not AI.",
+        img: "https://cdn.glitch.global/7dba3d27-6270-4b3f-a1a3-27d68df2aac1/DALL%C2%B7E%202025-03-24%2020.46.34%20-%20A%20realistic%20screenshot-style%20image%20showing%20a%20person%20designing%20a%20brochure%20using%20Canva.%20The%20interface%20should%20look%20like%20a%20drag-and-drop%20design%20tool%20with%20.webp?v=1742863610627"
+      },
+      {
+        q: "Look at the image below. Is a robot vacuum that maps your home and avoids obstacles using AI?",
+        a: true,
+        explanation: "Yes — robot vacuums use AI to navigate, avoid obstacles, and optimize their cleaning. Bonus points if they double as a kitten Uber.",
+        img: "https://cdn.glitch.global/7dba3d27-6270-4b3f-a1a3-27d68df2aac1/curious-kitten-standing-on-a-roomba-or-robot-vacuum_Roman-Pyshchyk_Shutterstock.jpg?v=1742856142837"
+      },
+      {
+        q: "Look at the image below. Does an electric toothbrush that gives personalized brushing feedback use AI?",
+        a: true,
+        explanation: "Yes — some smart toothbrushes use AI to guide your brushing habits. Now your toothbrush is judging you. 😬",
+        img: "https://cdn.glitch.global/7dba3d27-6270-4b3f-a1a3-27d68df2aac1/IMG_6_maximize_iO5__90147__22586.jpg?v=1742855755137"
+      },
+      {
+        q: "Look at the image below. Is watching a video on YouTube an example of AI?",
+        a: false,
+        explanation: "Watching a video? Nope, that's just streaming. But the eerily accurate video suggestions afterward? That's AI stalking your interests.",
+        img: "https://cdn.glitch.global/7dba3d27-6270-4b3f-a1a3-27d68df2aac1/youtube-2023-web-1A.jpeg?v=1742856286150"
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      document.getElementById("feedback").innerHTML = "";
+      const q = questions[current];
+      document.getElementById("question").innerText = q.q;
+      const imgElement = document.getElementById("question-img");
+      if (q.img) {
+        imgElement.src = q.img;
+        imgElement.style.display = "block";
+        imgElement.style.maxWidth = (current === 3 ? "30%" : "50%");
+      } else {
+        imgElement.style.display = "none";
+      }
+    }
+
+    function answer(userAnswer) {
+      const correct = questions[current].a;
+      const feedback = document.getElementById("feedback");
+      const isCorrect = userAnswer === correct;
+      if (isCorrect) score++;
+      feedback.innerHTML = `
+        <p><strong>${isCorrect ? "Correct! ✅" : "Oops! ❌"}</strong> ${questions[current].explanation}</p>
+        <br><button class='btn' onclick='nextQuestion()'>Next</button>
+      `;
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("quiz").innerHTML = `<h2>You got ${score} out of ${questions.length} correct!</h2>`;
+      }
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
+
+
+
+
+
